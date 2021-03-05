@@ -2,6 +2,8 @@ import React from 'react';
 import hookActions from './actions/hookActions';
 import './App.css';
 
+import Input from "./components/Input";
+
 /**
  * reducer to update state, called automatically by dispatch
  * @param state {object} - existing state 
@@ -10,7 +12,7 @@ import './App.css';
  * @returns {object} - new state
  */
 function reducer(state, action) {
-  const { type, action } = action;
+  const { type, payload } = action;
 
   switch(type) {
     case "setSecretWord":
@@ -30,14 +32,24 @@ function App() {
     dispatch({ type: "setSecretWord", payload: secretWord})
   };
 
-  react.useEffect(
+  React.useEffect(
     () => {
       hookActions.getSecretWord(setSecretWord)
     }, []
-  )
+  );
+
+  if(!state.secretWord) {
+    return(
+      <div data-test="spinner">
+        <span>... Loading ...</span>
+      </div>  
+    )
+  }
 
   return (
-    <div data-test="component-app"></div>
+    <div data-test="component-app">
+      <Input secretWord={state.secretWord} />
+    </div>
     )
 }
 
